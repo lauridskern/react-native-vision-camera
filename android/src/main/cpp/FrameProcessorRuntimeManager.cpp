@@ -162,7 +162,8 @@ void FrameProcessorRuntimeManager::installJSIBindings() {
     __android_log_write(ANDROID_LOG_INFO, TAG, "Setting new Frame Processor...");
 
     double viewTag = arguments[0].asNumber();
-    const jsi::Value& frameProcessor = arguments[1];
+    auto object = arguments[1].asObject(runtime);
+    const jsi::Value& frameProcessor = object.getProperty(runtime, "frameProcessor");
     this->setFrameProcessor(runtime, static_cast<int>(viewTag), frameProcessor);
 
     return jsi::Value::undefined();
