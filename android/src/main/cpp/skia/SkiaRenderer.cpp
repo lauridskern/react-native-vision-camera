@@ -3,8 +3,12 @@
 //
 
 #include "SkiaRenderer.h"
+
 #include <android/log.h>
+#include <android/api-level.h>
+
 #include "OpenGLError.h"
+#include <EGL/Platform.h>
 
 #include <core/SkColorSpace.h>
 #include <core/SkCanvas.h>
@@ -14,9 +18,10 @@
 #include <gpu/GrBackendSurface.h>
 #include <gpu/ganesh/SkSurfaceGanesh.h>
 #include <gpu/ganesh/SkImageGanesh.h>
+#include <android/SkImageAndroid.h>
 
 #include <android/native_window_jni.h>
-#include <android/surface_texture_jni.h>
+#include <android/hardware_buffer_jni.h>
 
 // from <gpu/ganesh/gl/GrGLDefines.h>
 #define GR_GL_TEXTURE_EXTERNAL 0x8D65
@@ -149,34 +154,13 @@ void SkiaRenderer::setInputTextureSize(int width, int height) {
   _inputHeight = height;
 }
 
-int SkiaRenderer::prepareInputTexture() {
-  __android_log_print(ANDROID_LOG_INFO, TAG, "prepareInputTexture()");
-  if (_previewSurface == nullptr) {
-    throw std::runtime_error("Cannot prepare input texture without an output texture! "
-                             "prepareInputTexture() needs to be called after setPreviewSurface().");
-  }
-  ensureOpenGL(_previewSurface);
-
-  if (_inputSurfaceTextureId != NO_INPUT_TEXTURE) {
-    GLuint textures[1] {_inputSurfaceTextureId};
-    glDeleteTextures(1, textures);
-    _inputSurfaceTextureId = NO_INPUT_TEXTURE;
-  }
-
-  GLuint textures[1] {NO_INPUT_TEXTURE};
-  glGenTextures(1, textures);
-  if (glGetError() != GL_NO_ERROR) throw OpenGLError("Failed to create OpenGL Texture!");
-  _inputSurfaceTextureId = textures[0];
-  __android_log_print(ANDROID_LOG_INFO, TAG, "Created input texture ID! %i", _inputSurfaceTextureId);
-  return static_cast<int>(_inputSurfaceTextureId);
-}
-
 void SkiaRenderer::renderLatestFrameToPreview() {
   __android_log_print(ANDROID_LOG_INFO, TAG, "renderLatestFrameToPreview()");
   if (_previewSurface == nullptr) {
     throw std::runtime_error("Cannot render latest frame to preview without a preview surface! "
                              "renderLatestFrameToPreview() needs to be called after setPreviewSurface().");
   }
+  return;
   if (_inputSurfaceTextureId == NO_INPUT_TEXTURE) {
     throw std::runtime_error("Cannot render latest frame to preview without an input texture! "
                              "renderLatestFrameToPreview() needs to be called after prepareInputTexture().");
@@ -249,15 +233,28 @@ void SkiaRenderer::renderLatestFrameToPreview() {
 }
 
 
-void SkiaRenderer::renderCameraFrameToOffscreenCanvas() {
+void SkiaRenderer::renderCameraFrameToOffscreenCanvas(jobject hardwareBufferBoxed) {
   __android_log_print(ANDROID_LOG_INFO, TAG, "renderCameraFrameToOffscreenCanvas()");
+
+  ensureOpenGL(_previewSurface);
+
+  if (_skiaContext == nullptr) {
+    _skiaContext = GrDirectContext::MakeGL();
+  }
+  _skiaContext->resetContext();
+
+  AHardwareBuffer* buffer = AHardwareBuffer_fromHardwareBuffer(jni::Environment::current(), hardwareBufferBoxed);
+
+  __android_log_print(ANDROID_LOG_INFO, TAG, "Getting Image..");
+  sk_sp<SkImage> image = SkImages::DeferredFromAHardwareBuffer(buffer, kOpaque_SkAlphaType);
+  __android_log_print(ANDROID_LOG_INFO, TAG, "Image is %i x %i", image->width(), image->height());
+  AHardwareBuffer_release(buffer);
 }
 
 
 void SkiaRenderer::registerNatives() {
   registerHybrid({
      makeNativeMethod("initHybrid", SkiaRenderer::initHybrid),
-     makeNativeMethod("prepareInputTexture", SkiaRenderer::prepareInputTexture),
      makeNativeMethod("setInputTextureSize", SkiaRenderer::setInputTextureSize),
      makeNativeMethod("setOutputSurface", SkiaRenderer::setOutputSurface),
      makeNativeMethod("destroyOutputSurface", SkiaRenderer::destroyOutputSurface),

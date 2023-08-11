@@ -126,6 +126,7 @@ class CameraOutputs(val cameraId: String,
 
       val imageReader = ImageReader.newInstance(size.width, size.height, video.format, VIDEO_OUTPUT_BUFFER_SIZE)
       imageReader.setOnImageAvailableListener({ reader ->
+        Log.i(TAG, "ImageReader image available...")
         try {
           val image = reader.acquireNextImage() ?: return@setOnImageAvailableListener
           video.onFrame(image)
