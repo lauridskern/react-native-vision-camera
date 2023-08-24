@@ -55,6 +55,8 @@
 		B88751A825E0102000DB86D6 /* CameraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B887518325E0102000DB86D6 /* CameraError.swift */; };
 		B88751A925E0102000DB86D6 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B887518425E0102000DB86D6 /* CameraView.swift */; };
 		B88B47472667C8E00091F538 /* AVCaptureSession+setVideoStabilizationMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88B47462667C8E00091F538 /* AVCaptureSession+setVideoStabilizationMode.swift */; };
+		B891B7932A97A741002C7C8D /* FrameResizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = B891B7902A97A741002C7C8D /* FrameResizer.mm */; };
+		B891B7942A97A741002C7C8D /* ImageHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = B891B7922A97A741002C7C8D /* ImageHelpers.mm */; };
 		B8994E6C263F03E100069589 /* JSINSObjectConversion.mm in Sources */ = {isa = PBXBuildFile; fileRef = B8994E6B263F03E100069589 /* JSINSObjectConversion.mm */; };
 		B8BD3BA2266E22D2006C80A2 /* Callback.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BD3BA1266E22D2006C80A2 /* Callback.swift */; };
 		B8D22CDC2642DB4D00234472 /* AVAssetWriterInputPixelBufferAdaptor+initWithVideoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D22CDB2642DB4D00234472 /* AVAssetWriterInputPixelBufferAdaptor+initWithVideoSettings.swift */; };
@@ -139,6 +141,10 @@
 		B887518425E0102000DB86D6 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		B88873E5263D46C7008B1D0E /* FrameProcessorPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FrameProcessorPlugin.h; sourceTree = "<group>"; };
 		B88B47462667C8E00091F538 /* AVCaptureSession+setVideoStabilizationMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureSession+setVideoStabilizationMode.swift"; sourceTree = "<group>"; };
+		B891B78F2A97A741002C7C8D /* ImageHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageHelpers.h; sourceTree = "<group>"; };
+		B891B7902A97A741002C7C8D /* FrameResizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FrameResizer.mm; sourceTree = "<group>"; };
+		B891B7912A97A741002C7C8D /* FrameResizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameResizer.h; sourceTree = "<group>"; };
+		B891B7922A97A741002C7C8D /* ImageHelpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageHelpers.mm; sourceTree = "<group>"; };
 		B8994E6B263F03E100069589 /* JSINSObjectConversion.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = JSINSObjectConversion.mm; sourceTree = "<group>"; };
 		B89A28742A68795E0092207F /* SkiaRenderer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SkiaRenderer.mm; sourceTree = "<group>"; };
 		B89A28752A68796A0092207F /* SkiaRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkiaRenderer.h; sourceTree = "<group>"; };
@@ -264,9 +270,21 @@
 			path = Parsers;
 			sourceTree = "<group>";
 		};
+		B891B78E2A97A739002C7C8D /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				B891B7912A97A741002C7C8D /* FrameResizer.h */,
+				B891B7902A97A741002C7C8D /* FrameResizer.mm */,
+				B891B78F2A97A741002C7C8D /* ImageHelpers.h */,
+				B891B7922A97A741002C7C8D /* ImageHelpers.mm */,
+			);
+			path = Plugins;
+			sourceTree = "<group>";
+		};
 		B8DCF2D725EA940700EA5C72 /* Frame Processor */ = {
 			isa = PBXGroup;
 			children = (
+				B891B78E2A97A739002C7C8D /* Plugins */,
 				B8F0825E2A6046FC00C17EB6 /* FrameProcessor.h */,
 				B8F0825F2A60491900C17EB6 /* FrameProcessor.mm */,
 				B8103E5725FF56F0007A1684 /* Frame.h */,
@@ -404,6 +422,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B86DC974260E310600FB17B2 /* CameraView+AVAudioSession.swift in Sources */,
+				B891B7932A97A741002C7C8D /* FrameResizer.mm in Sources */,
 				B887518625E0102000DB86D6 /* CameraView+RecordVideo.swift in Sources */,
 				B81BE1BF26B936FF002696CC /* AVCaptureDevice.Format+videoDimensions.swift in Sources */,
 				B8DB3BCA263DC4D8004C18D7 /* RecordingSession.swift in Sources */,
@@ -457,6 +476,7 @@
 				B8994E6C263F03E100069589 /* JSINSObjectConversion.mm in Sources */,
 				B88751A525E0102000DB86D6 /* CameraView+Focus.swift in Sources */,
 				B86DC971260E2D5200FB17B2 /* AVAudioSession+trySetAllowHaptics.swift in Sources */,
+				B891B7942A97A741002C7C8D /* ImageHelpers.mm in Sources */,
 				B88B47472667C8E00091F538 /* AVCaptureSession+setVideoStabilizationMode.swift in Sources */,
 				B887519E25E0102000DB86D6 /* AVCapturePhotoOutput.QualityPrioritization+descriptor.swift in Sources */,
 			);
