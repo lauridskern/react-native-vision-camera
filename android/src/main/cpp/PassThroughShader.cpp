@@ -36,7 +36,6 @@ void PassThroughShader::draw(const OpenGLTexture& texture, float* transformMatri
     _vertexParameters = {
         .aPosition = glGetAttribLocation(_programId, "aPosition"),
         .aTexCoord = glGetAttribLocation(_programId, "aTexCoord"),
-        .uTransformMatrix = glGetUniformLocation(_programId, "uTransformMatrix"),
     };
     _fragmentParameters = {
         .uTexture = glGetUniformLocation(_programId, "uTexture"),
@@ -71,8 +70,6 @@ void PassThroughShader::draw(const OpenGLTexture& texture, float* transformMatri
                         sizeof(Vertex),
                         reinterpret_cast<void*>(offsetof(Vertex, texCoord)));
 
-  glUniformMatrix4fv(_vertexParameters.uTransformMatrix, 1, GL_FALSE, transformMatrix);
-
   bool isT= glIsTexture(texture.id);
   __android_log_print(ANDROID_LOG_INFO, "PassThroughshader", "Tex ID %i %b", texture.id, isT);
 
@@ -103,7 +100,7 @@ GLuint PassThroughShader::loadShader(GLenum shaderType, const char* shaderCode) 
 GLuint PassThroughShader::createProgram(GLenum textureTarget) {
   GLuint vertexShader = loadShader(GL_VERTEX_SHADER, VERTEX_SHADER);
   auto fragmentShaderCode = textureTarget == GL_TEXTURE_EXTERNAL_OES ? FRAGMENT_SHADER_EXTERNAL_TEXTURE : FRAGMENT_SHADER;
-  GLuint fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragmentShaderCode);
+  GLuint fragmentShader = loadShader(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_EXTERNAL_TEXTURE);
 
   GLuint program = glCreateProgram();
   if (program == 0) throw OpenGLError("Failed to create pass-through program!");

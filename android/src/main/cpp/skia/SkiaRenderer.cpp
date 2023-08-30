@@ -93,6 +93,8 @@ OpenGLTexture& SkiaRenderer::renderFrame(OpenGLContext& glContext, OpenGLTexture
   float matrix[16] = { 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0 };
   shader.draw(texture, matrix);
 
+  glContext.flush();
+
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   return _offscreenTexture.value();

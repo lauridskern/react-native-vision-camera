@@ -44,7 +44,6 @@ class PassThroughShader {
   struct VertexParameters {
     GLint aPosition = NO_POSITION;
     GLint aTexCoord = NO_POSITION;
-    GLint uTransformMatrix = NO_POSITION;
   } _vertexParameters;
   struct FragmentParameters {
     GLint uTexture = NO_POSITION;
@@ -62,12 +61,11 @@ class PassThroughShader {
   static constexpr char VERTEX_SHADER[] = R"(
     attribute vec4 aPosition;
     attribute vec2 aTexCoord;
-    uniform mat4 uTransformMatrix;
     varying vec2 vTexCoord;
 
     void main() {
         gl_Position = aPosition;
-        vTexCoord = (uTransformMatrix * vec4(aTexCoord, 0.0, 1.0)).xy;
+        vTexCoord = aTexCoord;
     }
   )";
   static constexpr char FRAGMENT_SHADER[] = R"(
