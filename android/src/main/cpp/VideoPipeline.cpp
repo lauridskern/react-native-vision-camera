@@ -129,14 +129,6 @@ void VideoPipeline::onFrame(jni::alias_ref<jni::JArrayFloat> transformMatrixPara
     __android_log_print(ANDROID_LOG_INFO, TAG, "Rendering to Preview..");
     _previewOutput->renderTextureToSurface(texture, transformMatrix);
   }
-  if (_frameProcessorOutput) {
-    __android_log_print(ANDROID_LOG_INFO, TAG, "Rendering to FrameProcessor..");
-    _frameProcessorOutput->renderTextureToSurface(texture, transformMatrix);
-  }
-  if (_recordingSessionOutput) {
-    __android_log_print(ANDROID_LOG_INFO, TAG, "Rendering to RecordingSession..");
-    _recordingSessionOutput->renderTextureToSurface(texture, transformMatrix);
-  }
 }
 
 void VideoPipeline::setSkiaRenderer(jni::alias_ref<SkiaRenderer::javaobject> skiaRenderer) {
